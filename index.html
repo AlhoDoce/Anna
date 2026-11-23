@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff3f8">
+<meta name="robots" content="noindex, nofollow">
+<title>Nosso 5º Date?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&display=swap">
+<style>
+/* Conceito: um diário-scrapbook. Páginas de papel branco coladas com fita sobre um gradiente rosa e lilás; o único momento "barulhento" é a pergunta final. */
+:root {
+  --bg-1: #fff3f8;
+  --bg-2: #f4e9fc;
+  --bg-3: #ffe8ef;
+  --pink: #ffc4d8;
+  --pink-soft: #ffe1ec;
+  --lilac: #cdb6f5;
+  --lilac-soft: #eadffb;
+  --lilac-deep: #7b58c2;
+  --rose: #d63b60;
+  --rose-soft: #f27a93;
+  --ink: #3a2a4d;
+  --ink-soft: #6b5a7f;
+  --paper: #fffdfd;
+  --shadow: 0 12px 30px -14px rgba(120, 70, 150, .4), 0 2px 6px rgba(120, 70, 150, .08);
+  --f-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --f-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-hand: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+  color-scheme: light;
+}
+
+html, body { height: 100%; }
+html { box-sizing: border-box; }
+body {
+  margin: 0;
+  box-sizing: border-box;
+  background: linear-gradient(165deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+/* camadas de fundo */
+#cine {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
+  transition: opacity .7s ease;
+  background: radial-gradient(120% 80% at 50% 0%, #4b2a78 0%, #2a1646 55%, #1a0d30 100%);
+}
+body.cinema #cine { opacity: 1; }
+.floaters { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; transition: opacity .7s ease; }
+body.cinema .floaters { opacity: .4; }
+.fl {
+  position: absolute; top: 100%; left: var(--x);
+  width: var(--s); height: var(--s);
+  color: var(--c); opacity: var(--o);
+  animation: drift var(--d) linear var(--dl) infinite;
+  will-change: transform;
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to { transform: translate3d(var(--sw), -125vh, 0) rotate(var(--r)); }
+}
+
+#app { position: relative; height: 100%; z-index: 2; }
+.screen {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  overflow-x: hidden; overflow-y: auto;
+  padding-block: 18px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.in { width: min(100%, 460px); margin: auto; display: flex; flex-direction: column; }
+.in > * { flex: none; }
+.center { text-align: center; align-items: center; }
+[tabindex="-1"]:focus { outline: none; }
+
+/* entrada e saída */
+.screen.enter { animation: enterIn .6s cubic-bezier(.2, .8, .2, 1) both; }
+.screen.leave { animation: leaveOut .32s ease both; pointer-events: none; }
+@keyframes enterIn { from { opacity: 0; transform: translateY(22px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes leaveOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-16px) scale(.98); } }
+.screen.enter .rise { animation: rise .65s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms + 140ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* tipografia */
+.display { margin: 0 0 14px; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.9rem, 8.4vw, 2.6rem); line-height: 1.06; letter-spacing: -.01em; text-wrap: balance; }
+.display em, .q-title em { font-style: italic; font-weight: 500; color: var(--rose); }
+.lead { margin: 0 0 22px; font-size: 1.08rem; color: var(--ink-soft); text-wrap: pretty; }
+.pill { display: inline-block; margin: 0; font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--lilac-deep); background: var(--lilac-soft); padding: 5px 11px; border-radius: 99px; }
+
+/* botões */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 54px; padding: 0 22px; border: 0; border-radius: 999px;
+  font: 700 1.05rem/1.1 var(--f-body); color: #fff; text-decoration: none; text-align: center;
+  background: linear-gradient(135deg, var(--rose-soft), var(--rose));
+  box-shadow: 0 12px 22px -10px rgba(214, 59, 96, .65);
+  cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.btn:active { transform: scale(.96); }
+@media (hover: hover) { .btn:hover { box-shadow: 0 16px 26px -10px rgba(214, 59, 96, .7); } }
+.btn:focus-visible { outline: 3px solid var(--lilac-deep); outline-offset: 3px; }
+.btn.block { width: 100%; }
+.btn.ghost { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 2px var(--lilac), 0 6px 12px -8px rgba(120, 70, 150, .4); }
+.btn.small { min-height: 46px; font-size: .95rem; }
+.cta { position: sticky; bottom: 0; z-index: 3; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; padding: 16px 0 4px; background: linear-gradient(to top, rgba(255, 243, 248, .96) 58%, rgba(255, 243, 248, 0)); }
+
+/* envelope */
+.env { width: min(62vw, 230px); margin: 0 auto 20px; animation: bob 4.2s ease-in-out infinite; }
+.env svg { display: block; width: 100%; height: auto; overflow: visible; }
+.env .letter { transition: transform .7s cubic-bezier(.2, .9, .2, 1); }
+.env .flap-open, .env .flap-closed, .env .seal { transition: opacity .35s ease; }
+.env .flap-open { opacity: 0; }
+.env.open { animation: none; }
+.env.open .letter { transform: translateY(-48px); }
+.env.open .flap-open { opacity: 1; }
+.env.open .flap-closed, .env.open .seal { opacity: 0; }
+.tw { animation: twinkle 2.4s ease-in-out infinite; }
+.tw:nth-of-type(2n) { animation-delay: .8s; }
+.tw:nth-of-type(3n) { animation-delay: 1.5s; }
+@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.hand-svg { font-family: var(--f-hand); font-weight: 700; }
+
+/* progresso */
+.prog { display: flex; align-items: center; gap: 12px; margin: 0 4px 18px; }
+.prog-label { font-size: .74rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prog-bars { display: flex; gap: 6px; flex: 1; }
+.prog-bars i { flex: 1; height: 6px; border-radius: 99px; background: rgba(123, 88, 194, .18); position: relative; overflow: hidden; }
+.prog-bars i.done::after, .prog-bars i.now::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, var(--lilac-deep), var(--rose-soft)); transform-origin: left center; }
+.prog-bars i.now::after { animation: fill .9s .3s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* cartão de capítulo */
+.card {
+  position: relative; border-radius: 26px; padding: 28px 22px 22px;
+  background: radial-gradient(rgba(123, 88, 194, .11) 1px, transparent 1.3px) 0 0 / 18px 18px, var(--paper);
+  box-shadow: var(--shadow); transform: rotate(-.6deg);
+}
+.card::before {
+  content: ""; position: absolute; top: -11px; left: 50%; width: 96px; height: 26px; margin-left: -48px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .38) 0 6px, transparent 6px 12px), rgba(205, 182, 245, .7);
+  border-radius: 3px; transform: rotate(-3deg);
+}
+.head { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+.head h2 { margin: 8px 0 0; font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; line-height: 1.1; text-wrap: balance; }
+.photo { flex: none; width: 108px; padding: 7px 7px 20px; background: #fff; border-radius: 8px; box-shadow: var(--shadow); transform: rotate(3.5deg); position: relative; }
+.photo::after { content: ""; position: absolute; top: -9px; right: -10px; width: 40px; height: 16px; background: rgba(255, 196, 216, .85); transform: rotate(38deg); border-radius: 2px; }
+.art { aspect-ratio: 1; border-radius: 4px; display: grid; place-items: center; overflow: hidden; background: var(--tone, var(--pink-soft)); }
+.art svg { width: 90%; height: 90%; animation: flit 4.5s ease-in-out infinite; }
+@keyframes flit { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+.card p { margin: 0 0 14px; font-size: 1.04rem; text-wrap: pretty; }
+.card p.note { display: inline-block; margin: 14px 2px 0; padding: 0 4px; font: 700 1.65rem/1.15 var(--f-hand); color: var(--rose); transform: rotate(-1.5deg); background: linear-gradient(transparent 62%, rgba(255, 196, 216, .75) 62%); }
+.trail { animation: dash 1.4s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -16; } }
+.steam { animation: steam 2.6s ease-in-out infinite; }
+.steam:nth-of-type(2) { animation-delay: .5s; }
+.steam:nth-of-type(3) { animation-delay: 1.1s; }
+@keyframes steam { 0%, 100% { transform: translateY(2px); opacity: .35; } 50% { transform: translateY(-4px); opacity: 1; } }
+.svg-n { font: 800 18px var(--f-display); }
+
+/* tela do cinema */
+.cine-scr { color: #f7e8fb; }
+.cine-scr .pill { background: rgba(255, 196, 216, .16); color: var(--pink); }
+.eyebrow { margin: 0; display: inline-block; font: 700 .74rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--pink); background: rgba(255, 196, 216, .16); padding: 7px 12px; border-radius: 99px; }
+.slate { display: block; width: 200px; max-width: 70%; height: auto; margin: 16px auto 0; overflow: visible; }
+.sl { font: 700 10.5px var(--f-body); letter-spacing: .14em; fill: #cfb8ea; }
+.sl-v { font: 700 13px var(--f-body); letter-spacing: .06em; fill: #fff; }
+.film { position: relative; display: flex; gap: 6px; width: 100%; margin: 18px 0; padding: 18px 10px; background: #120a22; border-radius: 10px; }
+.film::before, .film::after { content: ""; position: absolute; left: 0; right: 0; height: 6px; background: repeating-linear-gradient(90deg, #4b3a66 0 8px, transparent 8px 16px); }
+.film::before { top: 5px; }
+.film::after { bottom: 5px; }
+.frame { flex: 1; aspect-ratio: 4 / 5; display: grid; place-items: center; border-radius: 5px; font: 800 1.35rem var(--f-display); color: #2a1646; background: linear-gradient(160deg, var(--pink), var(--lilac)); }
+.frame.q { background: transparent; border: 2px dashed var(--pink); color: var(--pink); animation: blink 1.7s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.scene { width: 100%; padding: 20px 20px 8px; text-align: left; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 196, 216, .28); border-radius: 22px; }
+.scene p { margin: 0 0 14px; font-size: 1.02rem; text-wrap: pretty; }
+.scene p.punch { font: 600 1.7rem/1.1 var(--f-display); font-style: italic; color: var(--pink); }
+
+/* pergunta */
+.q-card { padding-top: 30px; }
+.q-title { margin: 12px 0 14px; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.7rem, 7.4vw, 2.2rem); line-height: 1.08; text-wrap: balance; }
+.q-card p { margin: 0 0 12px; font-size: 1rem; }
+.q-card p.small { font-size: .94rem; color: var(--ink-soft); margin-bottom: 0; }
+.bubble { align-self: flex-start; min-height: 42px; margin: 14px 4px 0; padding: 9px 14px; border-radius: 16px 16px 16px 4px; background: var(--lilac-soft); color: var(--ink); font-weight: 500; font-size: .96rem; opacity: 0; transform: translateY(6px); transition: opacity .2s ease, transform .2s ease; }
+.bubble.on { opacity: 1; transform: none; }
+.arena { position: relative; height: 220px; margin-top: 6px; }
+.arena .btn { position: absolute; left: 0; top: 0; will-change: transform; }
+#yes { min-height: 62px; font-size: 1.22rem; padding: 0 30px; animation: glow 2.2s ease-in-out infinite; transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
+#yes:active { transform: none; }
+@keyframes glow { 0%, 100% { box-shadow: 0 12px 22px -10px rgba(214, 59, 96, .65), 0 0 0 0 rgba(242, 122, 147, .5); } 50% { box-shadow: 0 12px 22px -10px rgba(214, 59, 96, .65), 0 0 0 12px rgba(242, 122, 147, 0); } }
+#no { transition: transform .22s cubic-bezier(.3, 1.3, .5, 1); }
+#no:active { transform: none; }
+
+/* resposta e final */
+#yay { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 24px; text-align: center; background: rgba(255, 243, 248, .9); opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+#yay.on { opacity: 1; pointer-events: auto; }
+#yay h2 { margin: 12px 0 8px; font: 800 clamp(2.2rem, 10vw, 3.2rem)/1.05 var(--f-display); color: var(--rose); text-wrap: balance; }
+#yay p { margin: 0; color: var(--ink-soft); font-size: 1.1rem; }
+#yay svg { width: 84px; height: 84px; color: var(--rose); animation: beat .9s ease-in-out infinite; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.18); } }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 70; pointer-events: none; }
+.lead-hand { margin: 0 0 12px; font: 700 2rem/1.1 var(--f-hand); color: var(--rose); transform: rotate(-1.5deg); }
+.ticket { display: flex; width: 100%; margin: 20px 0 8px; text-align: left; background: #fff; border-radius: 16px; box-shadow: var(--shadow); transform: rotate(1.5deg); overflow: hidden; }
+.ticket .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; padding: 16px 18px; }
+.tk-k { font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--lilac-deep); }
+.tk-t { font: 800 1.35rem/1.1 var(--f-display); }
+.tk-s { font-size: .9rem; color: var(--ink-soft); }
+.ticket .stub { flex: none; width: 88px; display: grid; place-content: center; text-align: center; border-left: 2px dashed var(--lilac); background: var(--pink-soft); }
+.stub span { font: 800 2.2rem/1 var(--f-display); color: var(--rose); }
+.stub small { font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+
+@media (min-width: 760px) {
+  body { font-size: 17px; }
+  .in { width: min(100%, 520px); }
+  .arena { height: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .fl { animation: none; top: var(--rest); }
+}
+
+/* base da página (reset) */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C12.8 7 17 11.2 24 12C17 12.8 12.8 17 12 24C11.2 17 7 12.8 0 12C7 11.2 11.2 7 12 0Z"/></symbol>
+    <symbol id="i-flower" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5.8" r="4.6"/><circle cx="17.9" cy="10.1" r="4.6"/><circle cx="15.6" cy="17" r="4.6"/><circle cx="8.4" cy="17" r="4.6"/><circle cx="6.1" cy="10.1" r="4.6"/></g><circle cx="12" cy="12" r="3.4" fill="#fff"/></symbol>
+  </defs>
+</svg>
+
+<div id="cine" aria-hidden="true"></div>
+<div class="floaters" id="floaters" aria-hidden="true"></div>
+
+<main id="app">
+
+  <!-- 1. Boas-vindas -->
+  <section class="screen" id="s-intro" hidden aria-labelledby="t-intro">
+    <div class="in center">
+      <div class="env rise" id="env" style="--i:0" aria-hidden="true">
+        <svg viewBox="0 -74 240 254" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="30" width="232" height="146" rx="14" fill="#cdb6f5"/>
+          <path class="flap-open" d="M4 34L120 -52L236 34Z" fill="#b99be8" stroke="#b99be8" stroke-width="6" stroke-linejoin="round"/>
+          <g class="letter">
+            <rect x="26" y="10" width="188" height="140" rx="10" fill="#fff"/>
+            <text class="hand-svg" x="120" y="52" text-anchor="middle" font-size="28" fill="#d63b60">Para Anna</text>
+            <rect x="58" y="70" width="124" height="6" rx="3" fill="#ffc4d8"/>
+            <rect x="72" y="86" width="96" height="6" rx="3" fill="#eadffb"/>
+            <use href="#i-heart" x="108" y="102" width="24" height="24" style="color:#f27a93"/>
+          </g>
+          <path d="M4 38L124 104L4 172Z" fill="#f2bfd5"/>
+          <path d="M236 38L116 104L236 172Z" fill="#f2bfd5"/>
+          <path d="M4 176L120 96L236 176Z" fill="#ffd7e6"/>
+          <path class="flap-closed" d="M4 30L120 116L236 30Z" fill="#ffe1ec" stroke="#f2bfd5" stroke-width="2" stroke-linejoin="round"/>
+          <use class="seal" href="#i-heart" x="104" y="88" width="32" height="32" style="color:#d63b60"/>
+          <use class="tw" href="#i-spark" x="-6" y="-30" width="16" height="16" style="color:#cdb6f5"/>
+          <use class="tw" href="#i-spark" x="222" y="-4" width="20" height="20" style="color:#ffc4d8"/>
+          <use class="tw" href="#i-spark" x="226" y="120" width="12" height="12" style="color:#cdb6f5"/>
+        </svg>
+      </div>
+      <h1 id="t-intro" class="display rise" style="--i:1" tabindex="-1">Oi, Anna! Tenho uma perguntinha para você... 💌</h1>
+      <p class="lead rise" style="--i:2">Antes de chegar à pergunta, queria relembrar alguns momentos que tornaram essa história um pouquinho mais especial. Afinal, já temos quatro capítulos dessa história, né? KKKKK</p>
+      <div class="rise" style="--i:3; width:100%"><button id="start" class="btn block" type="button">Começar nossa retrospectiva ✨</button></div>
+    </div>
+  </section>
+
+  <!-- capítulos 1 a 4 entram aqui via JS -->
+
+  <!-- 5. Curiosidade -->
+  <section class="screen cine-scr" id="s-movie" hidden aria-labelledby="t-movie">
+    <div class="in center">
+      <h2 id="t-movie" class="eyebrow rise" style="--i:0" tabindex="-1">Uma curiosidade antes do pedido 🎬</h2>
+      <svg class="slate rise" style="--i:1" viewBox="0 0 220 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claquete de cinema">
+        <rect x="14" y="52" width="192" height="92" rx="10" fill="#1a0d30" stroke="#ffc4d8" stroke-width="2.5"/>
+        <path d="M14 78H206M14 108H206" stroke="#4b3a66" stroke-width="1.5"/>
+        <text class="sl" x="28" y="70">CENA</text><text class="sl-v" x="76" y="70">4 · TAKE 1</text>
+        <text class="sl" x="28" y="98">DIREÇÃO</text><text class="sl-v" x="96" y="98">Kayky</text>
+        <text class="sl" x="28" y="128">ELENCO</text><text class="sl-v" x="86" y="128">Anna</text>
+        <rect x="14" y="36" width="192" height="14" rx="3" fill="#2a1646" stroke="#ffc4d8" stroke-width="2"/>
+        <path d="M34 36h20l-10 14H24zM74 36h20l-10 14H64zM114 36h20l-10 14H104zM154 36h20l-10 14H144z" fill="#ffc4d8"/>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="0 14 34;-22 14 34;0 14 34;0 14 34" keyTimes="0;.1;.2;1" dur="3.2s" repeatCount="indefinite"/>
+          <rect x="14" y="20" width="192" height="14" rx="3" fill="#2a1646" stroke="#ffc4d8" stroke-width="2"/>
+          <path d="M34 20h20l-10 14H24zM74 20h20l-10 14H64zM114 20h20l-10 14H104zM154 20h20l-10 14H144z" fill="#ffc4d8"/>
+        </g>
+      </svg>
+      <div class="film rise" style="--i:2" aria-label="Quatro encontros e um quinto ainda sem resposta">
+        <div class="frame">1</div><div class="frame">2</div><div class="frame">3</div><div class="frame">4</div><div class="frame q">5?</div>
+      </div>
+      <div class="scene rise" style="--i:3">
+        <p>Me falaram — vulgo o filme do Adam Sandler que eu assisti KKKKK — que dá para saber se uma garota gosta da gente observando se ela aceita sair conosco pela quarta vez.</p>
+        <p class="punch">Bom... você topou!</p>
+        <p>E foi muito bom, mas confesso que ainda fiquei na dúvida KKKKKKK.</p>
+      </div>
+      <div class="cta" style="width:100%; background:linear-gradient(to top, rgba(26,13,48,.95) 58%, rgba(26,13,48,0))"><button class="btn block" type="button" data-go="q">Tá, mas qual é a pergunta? 👀</button></div>
+    </div>
+  </section>
+
+  <!-- 6. A pergunta -->
+  <section class="screen" id="s-q" hidden aria-labelledby="t-q">
+    <div class="in">
+      <div class="card q-card">
+        <p class="pill rise" style="--i:0">A perguntinha</p>
+        <h2 id="t-q" class="q-title rise" style="--i:1" tabindex="-1">Anna, você toparia sair comigo pela <em>5ª vez</em>?</h2>
+        <p class="rise" style="--i:2">Só para selarmos oficialmente nossos dates? KKKKK</p>
+        <p class="rise" style="--i:3">Você é uma garota diferente, me cativou e eu quero te acompanhar mais de perto, ver suas metas sendo realizadas e continuar conhecendo esse seu jeitinho.</p>
+        <p class="small rise" style="--i:4">Sei que isso ficou bem brega, nem sei por que escrevi tudo isso KKKKK, mas foi de coração. ❤️</p>
+      </div>
+      <div class="bubble" id="bubble" aria-live="polite"></div>
+      <div class="arena" id="arena">
+        <button class="btn" id="yes" type="button">SIM! 💗</button>
+        <button class="btn ghost" id="no" type="button">NÃO 🙈</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Final -->
+  <section class="screen" id="s-final" hidden aria-labelledby="t-final">
+    <div class="in center">
+      <h2 id="t-final" class="display rise" style="--i:0; font-size:clamp(1.7rem,7.2vw,2.3rem)" tabindex="-1">EU SABIA QUE VALIA A TENTATIVA! 💗</h2>
+      <p class="lead-hand rise" style="--i:1">Então temos um quinto date?!</p>
+      <p class="lead rise" style="--i:2">Agora só falta combinar os detalhes. Prometo que vou fazer valer a pena e que esse seja mais um daqueles momentos que a gente vai lembrar sorrindo.</p>
+      <div class="ticket rise" style="--i:3">
+        <div class="main"><span class="tk-k">Ingresso para dois</span><strong class="tk-t">Nosso 5º date</strong><span class="tk-s">Data e horário: a combinar 🥰</span></div>
+        <div class="stub"><span>5ª</span><small>vez</small></div>
+      </div>
+      <div class="cta rise" style="--i:4; width:100%">
+        <a id="wa" class="btn block" href="https://wa.me/" target="_blank" rel="noopener noreferrer">Confirmar meu SIM pelo WhatsApp 💬</a>
+        <button class="btn ghost small block" type="button" data-go="intro">Rever do começo</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="yay" role="status" aria-live="polite">
+  <div>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>
+    <h2>Você disse SIM! 💖</h2>
+    <p>Oficialmente, temos um quinto date.</p>
+  </div>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ===== Configuração =====
+     Troque WHATSAPP_NUMBER pelo número com DDI + DDD, só dígitos (ex.: 5511999999999).
+     Enquanto for o texto de exemplo, o botão abre o WhatsApp com a mensagem pronta, sem contato definido. */
+  const WHATSAPP_NUMBER = '55SEUNUMERO';
+  const WHATSAPP_TEXT = 'SIMMMMM! 💗 Eu topo o nosso 5º date, Kayky! Agora só falta combinar o dia. 🥰';
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  document.documentElement.lang = 'pt-BR';
+
+  /* ===== Ilustrações ===== */
+  const ART = {
+    butterfly: () => `
+      <svg viewBox="0 0 120 120" role="img" aria-label="Borboleta">
+        <defs>
+          <linearGradient id="bw1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc4d8"/><stop offset="1" stop-color="#f27a93"/></linearGradient>
+          <linearGradient id="bw2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eadffb"/><stop offset="1" stop-color="#b99be8"/></linearGradient>
+          <g id="bwL">
+            <path d="M58 58C46 22 10 18 12 44C13 62 38 66 58 62Z" fill="url(#bw1)"/>
+            <path d="M58 64C42 66 24 78 32 94C40 106 56 90 58 72Z" fill="url(#bw2)"/>
+            <circle cx="30" cy="42" r="5" fill="#fff" opacity=".85"/><circle cx="38" cy="88" r="3.5" fill="#fff" opacity=".85"/>
+            <path d="M58 34C55 24 50 20 46 18" fill="none" stroke="#3a2a4d" stroke-width="2" stroke-linecap="round"/>
+          </g>
+        </defs>
+        <path class="trail" d="M8 110C22 98 8 86 26 80" fill="none" stroke="#b99be8" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 7"/>
+        <use href="#bwL"/><use href="#bwL" transform="translate(120 0) scale(-1 1)"/>
+        <rect x="57" y="40" width="6" height="44" rx="3" fill="#3a2a4d"/><circle cx="60" cy="37" r="5" fill="#3a2a4d"/>
+      </svg>`,
+    coffee: () => `
+      <svg viewBox="0 0 120 120" role="img" aria-label="Xícara de café">
+        <ellipse cx="58" cy="102" rx="40" ry="7" fill="#cdb6f5"/>
+        <path d="M94 58h4c9 0 9 20-3 20h-9" fill="none" stroke="#3a2a4d" stroke-width="3" stroke-linecap="round"/>
+        <path d="M24 54h68v14c0 17-13 28-34 28S24 85 24 68z" fill="#fff" stroke="#3a2a4d" stroke-width="3" stroke-linejoin="round"/>
+        <ellipse cx="58" cy="54" rx="34" ry="7" fill="#c98f95" stroke="#3a2a4d" stroke-width="3"/>
+        <use href="#i-heart" x="51" y="48" width="14" height="12" style="color:#ffe1ec"/>
+        <path class="steam" d="M44 40C40 32 48 28 44 20" fill="none" stroke="#7b58c2" stroke-width="3" stroke-linecap="round"/>
+        <path class="steam" d="M58 38C54 30 62 26 58 16" fill="none" stroke="#7b58c2" stroke-width="3" stroke-linecap="round"/>
+        <path class="steam" d="M72 40C68 32 76 28 72 20" fill="none" stroke="#7b58c2" stroke-width="3" stroke-linecap="round"/>
+      </svg>`,
+    smile: () => {
+      let petals = '';
+      for (let i = 0; i < 8; i++) petals += `<ellipse cx="60" cy="27" rx="10" ry="17" fill="${i % 2 ? '#cdb6f5' : '#ffc4d8'}" transform="rotate(${i * 45} 60 60)"/>`;
+      return `
+      <svg viewBox="0 0 120 120" role="img" aria-label="Flor com um sorriso">
+        ${petals}
+        <circle cx="60" cy="60" r="25" fill="#fffaf2" stroke="#3a2a4d" stroke-width="3"/>
+        <path d="M49 56q4-5 8 0M63 56q4-5 8 0" fill="none" stroke="#3a2a4d" stroke-width="3" stroke-linecap="round"/>
+        <path d="M48 66q12 13 24 0" fill="none" stroke="#d63b60" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="45" cy="66" r="4" fill="#ffc4d8" opacity=".8"/><circle cx="75" cy="66" r="4" fill="#ffc4d8" opacity=".8"/>
+        <use class="tw" href="#i-spark" x="92" y="8" width="16" height="16" style="color:#d63b60"/>
+        <use class="tw" href="#i-spark" x="8" y="14" width="11" height="11" style="color:#7b58c2"/>
+      </svg>`;
+    },
+    path: () => `
+      <svg viewBox="0 0 120 120" role="img" aria-label="Do encontro 4 para o 5">
+        <path class="trail" d="M38 86C66 98 44 52 82 46" fill="none" stroke="#7b58c2" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+        <circle cx="24" cy="94" r="18" fill="#cdb6f5"/>
+        <text class="svg-n" x="24" y="94" dy=".36em" text-anchor="middle" fill="#3a2a4d">4</text>
+        <circle cx="96" cy="34" r="20" fill="#fff" stroke="#d63b60" stroke-width="2.5" stroke-dasharray="5 5"/>
+        <text class="svg-n" x="96" y="34" dy=".36em" text-anchor="middle" fill="#d63b60">5?</text>
+        <use class="tw" href="#i-spark" x="60" y="8" width="14" height="14" style="color:#f27a93"/>
+        <use class="tw" href="#i-spark" x="8" y="48" width="11" height="11" style="color:#7b58c2"/>
+      </svg>`
+  };
+
+  /* ===== Conteúdo dos capítulos ===== */
+  const CHAPTERS = [
+    { title: 'O começo de tudo 🦋', art: 'butterfly', tone: '#ffe1ec',
+      text: ['Eu estava nervoso e nem imaginava o que passava pela sua cabeça para aceitar sair comigo. Mas, no fim, conheci uma garota que despertou em mim um interesse incomum.'],
+      note: 'Às vezes, a gente só precisa ter coragem de dar o primeiro passo.' },
+    { title: 'A curiosidade ☕', art: 'coffee', tone: '#eadffb',
+      text: ['Eu já estava mais confiante, mas ainda com aquele leve receio de não entender muito bem os seus gostos KKKKK. Queria te conhecer de verdade: suas ambições, suas metas, seu jeito de pensar e as coisas que fazem você ser você.'],
+      note: 'Eu queria descobrir cada vez mais sobre você.' },
+    { title: 'O sorriso 😊', art: 'smile', tone: '#ffe1ec',
+      text: ['Aconteceu tudo meio de repente e eu fiquei sem reação. Você me fez o convite — tá bom, eu me ofereci de certa forma KKKKK — e foi algo tão leve e legal. Foi ali que percebi o quanto adoro o seu sorriso.'],
+      note: 'Seu sorriso virou uma das minhas partes favoritas.' },
+    { title: 'E agora? ✨', art: 'path', tone: '#eadffb',
+      text: ['Esse foi um pouquinho diferente KKKKK. Confesso que bateu o medo de não existir um quinto date.',
+             'Mas, a essa altura, eu já tinha percebido o quanto você é incrível. Quero continuar te conhecendo, compartilhar momentos bons e mostrar que, mesmo no meio da correria e da loucura da vida, dá para encontrar leveza e alguém com quem contar.',
+             'Quero acompanhar suas conquistas, conhecer seus sonhos e, quem sabe, fazer parte de alguns deles.'],
+      note: 'Quatro encontros depois… e a vontade é de viver mais histórias.' }
+  ];
+
+  const progress = (n, total) => `
+    <div class="prog rise" style="--i:0" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${n}" aria-label="Encontro ${n} de ${total}">
+      <span class="prog-label">Encontro ${n} de ${total}</span>
+      <span class="prog-bars">${Array.from({ length: total }, (_, i) => `<i class="${i + 1 < n ? 'done' : i + 1 === n ? 'now' : ''}"></i>`).join('')}</span>
+    </div>`;
+
+  const chapterScreen = (c, i) => {
+    const n = i + 1, total = CHAPTERS.length;
+    const next = n < total ? 'c' + (n + 1) : 'movie';
+    const label = n < total ? 'Próximo encontro →' : 'Continuar →';
+    return `
+    <section class="screen" id="s-c${n}" hidden aria-labelledby="t-c${n}">
+      <div class="in">
+        ${progress(n, total)}
+        <article class="card">
+          <div class="head rise" style="--i:1">
+            <div class="photo"><div class="art" style="--tone:${c.tone}">${ART[c.art]()}</div></div>
+            <div><p class="pill">Encontro ${String(n).padStart(2, '0')}</p><h2 id="t-c${n}" tabindex="-1">${c.title}</h2></div>
+          </div>
+          ${c.text.map((t, k) => `<p class="rise" style="--i:${k + 2}">${t}</p>`).join('')}
+          <p class="note rise" style="--i:${c.text.length + 2}">${c.note}</p>
+        </article>
+        <div class="cta"><button class="btn block" type="button" data-go="${next}">${label}</button></div>
+      </div>
+    </section>`;
+  };
+
+  /* ===== Elementos flutuantes do fundo ===== */
+  const FLOATERS = [
+    ['flower', 6, 30, 26, -4, '#ffc4d8', .8, 18, 24, 90],
+    ['spark', 22, 16, 19, -12, '#cdb6f5', .85, 62, -18, 45],
+    ['heart', 38, 18, 24, -20, '#f27a93', .5, 80, 20, -30],
+    ['flower', 55, 26, 30, -9, '#cdb6f5', .7, 35, -26, -120],
+    ['spark', 70, 20, 21, -3, '#ffffff', .95, 12, 22, 60],
+    ['heart', 84, 24, 27, -16, '#ffc4d8', .75, 50, -20, 25],
+    ['flower', 92, 20, 23, -25, '#ffc4d8', .75, 72, 14, 100],
+    ['spark', 14, 22, 28, -18, '#f27a93', .45, 90, -16, 40],
+    ['heart', 62, 14, 22, -7, '#ffc4d8', .6, 26, 18, -20],
+    ['spark', 46, 14, 25, -22, '#cdb6f5', .7, 8, -14, 70]
+  ];
+  $('#floaters').innerHTML = FLOATERS.map(([t, x, s, d, dl, c, o, rest, sw, r]) =>
+    `<svg class="fl" style="--x:${x}%;--s:${s}px;--d:${d}s;--dl:${dl}s;--c:${c};--o:${o};--rest:${rest}%;--sw:${sw}px;--r:${r}deg"><use href="#i-${t}"/></svg>`).join('');
+
+  /* ===== Navegação entre telas ===== */
+  $('#s-movie').insertAdjacentHTML('beforebegin', CHAPTERS.map(chapterScreen).join(''));
+  if (reduce) $$('animateTransform').forEach(e => e.remove());
+
+  let current = null, busy = false;
+
+  function go(id) {
+    const next = document.getElementById('s-' + id);
+    if (!next || next === current || busy) return;
+    busy = true;
+    const prev = current;
+    current = next;
+    document.body.classList.toggle('cinema', id === 'movie');
+    const show = () => {
+      if (id === 'intro') { $('#env').classList.remove('open'); resetQuestion(); }
+      next.hidden = false;
+      next.classList.remove('enter', 'leave');
+      void next.offsetWidth;
+      next.classList.add('enter');
+      next.scrollTop = 0;
+      const h = $('[tabindex="-1"]', next);
+      if (h) h.focus({ preventScroll: true });
+      if (id === 'q') layoutArena();
+      busy = false;
+    };
+    if (prev) {
+      prev.classList.remove('enter');
+      prev.classList.add('leave');
+      setTimeout(() => { prev.hidden = true; prev.classList.remove('leave'); show(); }, reduce ? 0 : 320);
+    } else show();
+  }
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-go]');
+    if (b) go(b.dataset.go);
+  });
+
+  $('#start').addEventListener('click', () => {
+    $('#env').classList.add('open');
+    setTimeout(() => go('c1'), reduce ? 0 : 750);
+  });
+
+  /* ===== A pergunta: o botão NÃO que foge ===== */
+  const arena = $('#arena'), yes = $('#yes'), no = $('#no'), bubble = $('#bubble'), yay = $('#yay');
+  const MSGS = [
+    'Ops, quase! KKKKK',
+    'Tem certeza disso? 👀',
+    'Acho que esse botão não quer colaborar!',
+    'KKKKKK, tenta mais uma vez!',
+    'Ele é rápido, hein? 🏃',
+    'O SIM tá bem ali, olha... 💗',
+    'Nem eu consigo alcançar esse botão KKKKK',
+    'Ok, esse botão desistiu de você 🙈'
+  ];
+  const st = { tries: 0, moved: false, done: false, last: 0, yes: { x: 0, y: 0, s: 1 }, no: { x: 0, y: 0 } };
+  const place = (el, x, y, s = 1) => { el.style.transform = `translate3d(${x}px,${y}px,0) scale(${s})`; };
+
+  function layoutArena() {
+    const w = arena.clientWidth, h = arena.clientHeight;
+    if (!w) return;
+    const yw = yes.offsetWidth, yh = yes.offsetHeight, nw = no.offsetWidth, nh = no.offsetHeight;
+    if (!st.moved) {
+      const gap = 14, x0 = Math.max(0, (w - (yw + gap + nw)) / 2);
+      st.yes.x = x0; st.yes.y = (h - yh) / 2;
+      st.no.x = x0 + yw + gap; st.no.y = (h - nh) / 2;
+    } else {
+      st.no.x = Math.min(Math.max(0, st.no.x), Math.max(0, w - nw));
+      st.no.y = Math.min(Math.max(0, st.no.y), Math.max(0, h - nh));
+    }
+    place(yes, st.yes.x, st.yes.y, st.yes.s);
+    place(no, st.no.x, st.no.y);
+  }
+
+  function dodge(e) {
+    if (e) e.preventDefault();
+    const now = performance.now();
+    if (now - st.last < 90) return;
+    st.last = now;
+    const w = arena.clientWidth, h = arena.clientHeight, nw = no.offsetWidth, nh = no.offsetHeight;
+    const maxX = Math.max(0, w - nw), maxY = Math.max(0, h - nh);
+    const cx = st.yes.x + yes.offsetWidth / 2, cy = st.yes.y + yes.offsetHeight / 2;
+    const hw = yes.offsetWidth * st.yes.s / 2 + 10, hh = yes.offsetHeight * st.yes.s / 2 + 10;
+    const hit = (x, y) => x < cx + hw && x + nw > cx - hw && y < cy + hh && y + nh > cy - hh;
+    let best = null, bd = -1;
+    for (let i = 0; i < 30; i++) {
+      const x = Math.random() * maxX, y = Math.random() * maxY;
+      if (hit(x, y)) continue;
+      const d = Math.hypot(x - st.no.x, y - st.no.y);
+      if (d > bd) { bd = d; best = { x, y }; }
+      if (d > 120) break;
+    }
+    if (!best) {
+      const far = [[0, 0], [maxX, 0], [0, maxY], [maxX, maxY]]
+        .filter(([x, y]) => !hit(x, y))
+        .sort((a, b) => Math.hypot(b[0] - st.no.x, b[1] - st.no.y) - Math.hypot(a[0] - st.no.x, a[1] - st.no.y))[0] || [maxX, 0];
+      best = { x: far[0], y: far[1] };
+    }
+    st.moved = true;
+    st.tries++;
+    st.no.x = best.x; st.no.y = best.y;
+    st.yes.s = Math.min(1.2, 1 + st.tries * 0.025);
+    place(no, st.no.x, st.no.y);
+    place(yes, st.yes.x, st.yes.y, st.yes.s);
+    const msg = st.tries <= MSGS.length ? MSGS[st.tries - 1] : MSGS[MSGS.length - 1 - Math.floor(Math.random() * 4)];
+    bubble.textContent = msg;
+    bubble.classList.add('on');
+  }
+
+  no.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') dodge(); });
+  no.addEventListener('pointerdown', e => dodge(e));
+  no.addEventListener('click', e => { e.preventDefault(); if (e.detail === 0) dodge(); });
+  window.addEventListener('resize', () => { if (current && current.id === 's-q') layoutArena(); });
+
+  function resetQuestion() {
+    st.tries = 0; st.moved = false; st.done = false; st.yes.s = 1;
+    bubble.textContent = ''; bubble.classList.remove('on');
+    yes.removeAttribute('aria-disabled');
+  }
+
+  yes.addEventListener('click', () => {
+    if (st.done) return;
+    st.done = true;
+    yes.setAttribute('aria-disabled', 'true');
+    const r = yes.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 130);
+    yay.classList.add('on');
+    setTimeout(() => {
+      go('final');
+      setTimeout(() => yay.classList.remove('on'), 350);
+      setTimeout(() => burst(innerWidth / 2, innerHeight * 0.35, 110), 500);
+    }, reduce ? 700 : 1900);
+  });
+
+  /* ===== WhatsApp ===== */
+  const digits = WHATSAPP_NUMBER.replace(/\D/g, '');
+  const validNumber = /^\d{10,15}$/.test(WHATSAPP_NUMBER);
+  $('#wa').href = `https://wa.me/${validNumber ? digits : ''}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
+
+  /* ===== Confete (canvas leve) ===== */
+  const cv = $('#confetti'), ctx = cv.getContext('2d');
+  const HEART = new Path2D('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+  const SPARK = new Path2D('M12 0C12.8 7 17 11.2 24 12C17 12.8 12.8 17 12 24C11.2 17 7 12.8 0 12C7 11.2 11.2 7 12 0Z');
+  const COLORS = ['#ffc4d8', '#cdb6f5', '#f27a93', '#d63b60', '#ffffff', '#b99be8'];
+  let parts = [], raf = 0, last = 0;
+
+  function sizeCanvas() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(innerWidth * dpr);
+    cv.height = Math.round(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function burst(x, y, n) {
+    if (reduce) return;
+    sizeCanvas();
+    for (let i = 0; i < n; i++) {
+      const ang = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.4;
+      const sp = 6 + Math.random() * 10;
+      const r = Math.random();
+      parts.push({
+        x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, g: .22 + Math.random() * .1,
+        rot: Math.random() * 6.28, vr: (Math.random() - .5) * .3, s: 8 + Math.random() * 10,
+        k: r < .5 ? 0 : r < .75 ? 1 : 2, c: COLORS[(Math.random() * COLORS.length) | 0],
+        life: 0, max: 150 + Math.random() * 80
+      });
+    }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+  }
+  function tick(t) {
+    const dt = Math.min(2, (t - last) / 16.67); last = t;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    parts = parts.filter(p => p.life < p.max && p.y < innerHeight + 40);
+    for (const p of parts) {
+      p.vx *= .992; p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt; p.life += dt;
+      ctx.save();
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, Math.min(1, (p.max - p.life) / 40));
+      ctx.fillStyle = p.c;
+      if (p.k === 0) ctx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .6);
+      else { const sc = p.s / 24; ctx.scale(sc, sc); ctx.translate(-12, -12); ctx.fill(p.k === 1 ? HEART : SPARK); }
+      ctx.restore();
+    }
+    if (parts.length) raf = requestAnimationFrame(tick);
+    else { raf = 0; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+
+  go('intro');
+})();
+</script>
+</body>
+</html>
